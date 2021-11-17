@@ -1,5 +1,4 @@
 import random
-import numpy as np
 import pygame, sys
 from pygame.locals import *
 from logic import Weapon
