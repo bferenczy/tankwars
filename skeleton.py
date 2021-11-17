@@ -1,7 +1,6 @@
 import random
 import pygame, sys
 from pygame.locals import *
-from logic import Weapon
 from shapely import geometry
 from scipy.interpolate import InterpolatedUnivariateSpline
 
