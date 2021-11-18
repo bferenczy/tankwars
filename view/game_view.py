@@ -1,20 +1,19 @@
 import pygame
 
-from terrain import Terrain
+from .view import View
 from constants import WHITE, FPS
 
-class GameView:
 
-    def __init__(self, DISPLAYSURF, terrain):
+class GameView(View):
+
+    def __init__(self, DISPLAYSURF, game_model=None):
         self.DISPLAYSURF = DISPLAYSURF
-        self.terrain = terrain
         self.FramePerSec = pygame.time.Clock()
+        self.game_model = game_model
 
 
-    def refresh_screen(self):
-        self.DISPLAYSURF.fill(WHITE)
-        self.terrain.draw(self.DISPLAYSURF)
-        pygame.display.update()
+    def register_model(self, game_model):
+        self.game_model = game_model
 
 
     def tick(self):
@@ -22,5 +21,6 @@ class GameView:
 
 
     def draw(self):
-        pass
+        self.DISPLAYSURF.fill(WHITE)
+        pygame.display.update()
 

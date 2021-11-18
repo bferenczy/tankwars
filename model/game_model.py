@@ -1,11 +1,12 @@
 from player import Player
 from weapon import DefaultWeapon
 
+
 class GameModel:
 
-    def __init__(self, player1, player2, terrain):
+    def __init__(self, player1, player2, terrain_model):
         self.players = [player1, player2]
-        self.terrain = terrain
+        self.terrain_model = terrain_model
         self.active_player = None
 
 
@@ -13,7 +14,7 @@ class GameModel:
         self._select_active_player()
         self.active_player.step()
         weapon = DefaultWeapon()
-        self.terrain.destruct(aimed_column, weapon)
+        self.terrain_model.destruct(aimed_column, weapon)
         print("------------")
         print("End of round")
         print("------------")
