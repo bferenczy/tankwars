@@ -10,7 +10,6 @@ from model.terrain_model import TerrainModel
 from controller.terrain_controller import TerrainController
 from view.terrain_view import TerrainView
 from constants import WIDTH, HEIGHT, WHITE
-from terrain import Terrain
 
 
 DISPLAYSURF = pygame.display.set_mode((WIDTH, HEIGHT))
