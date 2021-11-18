@@ -6,10 +6,11 @@ class Player:
         self.name = name
         self.attack = Attack()
         self.pos = pos
-        pass
+
 
     def get_name(self) -> str:
         return self.name
+
 
     def step(self) -> None:
         print("It's " + self.name + "'s turn")
@@ -26,3 +27,4 @@ class HumanPlayer(Player):
 class AIPlayer(Player):
     def __init__(self, name: str, pos: int) -> None:
         super().__init__(name, pos)
+

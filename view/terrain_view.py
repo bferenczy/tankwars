@@ -16,6 +16,10 @@ class TerrainView(View):
         self.terrain_model = terrain_model
 
 
+    def update_view(self):
+        self.draw()
+
+
     def draw(self):
         # surface: list of [x,y] pairs, ex.: [[0, 0], [1, 2]]
         # where x and y are integers

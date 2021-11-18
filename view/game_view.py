@@ -10,6 +10,11 @@ class GameView(View):
         self.DISPLAYSURF = DISPLAYSURF
         self.FramePerSec = pygame.time.Clock()
         self.game_model = game_model
+        self.terrain_view = None
+
+
+    def register_terrain_view(self, terrain_view):
+        self.terrain_view = terrain_view
 
 
     def register_model(self, game_model):
@@ -20,7 +25,12 @@ class GameView(View):
         self.FramePerSec.tick(FPS)
 
 
+    def update_view(self):
+        self.draw()
+
+
     def draw(self):
         self.DISPLAYSURF.fill(WHITE)
         pygame.display.update()
+        self.terrain_view.update_view()
 

@@ -2,12 +2,15 @@ from player import Player
 from weapon import DefaultWeapon
 
 
-class GameModel:
+class GameModel():
 
-    def __init__(self, player1, player2, terrain_model):
+    def __init__(self, player1, player2):
         self.players = [player1, player2]
-        self.terrain_model = terrain_model
         self.active_player = None
+
+
+    def register_terrain_model(self, terrain_model):
+        self.terrain_model = terrain_model
 
 
     def round(self, aimed_column):

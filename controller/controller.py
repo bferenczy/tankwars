@@ -5,11 +5,6 @@ class Controller(ABC):
 
 
     @abstractmethod
-    def register_controller(self):
-        return
-
-
-    @abstractmethod
     def register_model(self):
         return
 
@@ -18,7 +13,3 @@ class Controller(ABC):
     def register_view(self):
         return
 
-
-    @abstractmethod
-    def update_view(self):
-        return
