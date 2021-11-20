@@ -7,10 +7,15 @@ class GameModel():
     def __init__(self, player1, player2):
         self.players = [player1, player2]
         self.active_player = None
+        self.tank_model = None
 
 
     def register_terrain_model(self, terrain_model):
         self.terrain_model = terrain_model
+
+
+    def register_tank_model(self, tank_model):
+        self.tank_model = tank_model
 
 
     def round(self, aimed_column):

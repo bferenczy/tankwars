@@ -11,10 +11,15 @@ class GameView(View):
         self.FramePerSec = pygame.time.Clock()
         self.game_model = game_model
         self.terrain_view = None
+        self.tank_view = None
 
 
     def register_terrain_view(self, terrain_view):
         self.terrain_view = terrain_view
+
+
+    def register_tank_view(self, tank_view):
+        self.tank_view = tank_view
 
 
     def register_model(self, game_model):
@@ -33,4 +38,5 @@ class GameView(View):
         self.DISPLAYSURF.fill(WHITE)
         pygame.display.update()
         self.terrain_view.update_view()
+        self.tank_view.update_view()
 

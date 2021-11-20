@@ -8,6 +8,8 @@ from controller.game_controller import GameController
 from view.game_view import GameView
 from model.terrain_model import TerrainModel
 from view.terrain_view import TerrainView
+from model.tank_model import TankModel
+from view.tank_view import TankView
 from constants import WIDTH, HEIGHT, WHITE
 
 
@@ -43,6 +45,11 @@ def main():
     game_view.register_terrain_view(terrain_view=terrain_view)
     game_model.register_terrain_model(terrain_model=terrain_model)
 
+    tank_model = TankModel()
+    tank_view = TankView()
+    tank_view.register_model(tank_model)
+    game_model.register_tank_model(tank_model=tank_model)
+    game_view.register_tank_view(tank_view=tank_view)
 
     try:
         game_controller.run()
