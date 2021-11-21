@@ -11,6 +11,7 @@ class TerrainModel:
 
 
     def __init__(self, args):
+        # holds only the y coordinates sorted by x [0-WIDTH)
         self.columns = list()
         self._generate_random_terrain(args)
 
@@ -71,6 +72,10 @@ class TerrainModel:
                     return False
 
         return True
+
+
+    def get_terrain_surface(self):
+        return list(zip([x for x in range(WIDTH)], self.columns))
 
 
     def destruct(self, x, weapon: IWeapon):

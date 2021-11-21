@@ -1,6 +1,7 @@
 from .controller import Controller
 from model.game_model import GameModel
 from view.game_view import GameView
+import pygame
 
 
 class GameController(Controller):
@@ -21,6 +22,7 @@ class GameController(Controller):
 
     def run(self):
         while not self._is_game_over():
+            pygame.event.get()
             self._step()
 
 

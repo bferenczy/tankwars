@@ -1,10 +1,15 @@
+import pygame
+
 from .view import View
+
+from constants import BLACK, WIDTH, HEIGHT
 
 
 class TankView(View):
 
 
-    def __init__(self):
+    def __init__(self, DISPLAYSURF):
+        self.DISPLAYSURF = DISPLAYSURF
         self.tank_model = None
 
 
@@ -13,7 +18,16 @@ class TankView(View):
 
 
     def draw(self):
-        pass
+        trajectory = self.tank_model.get_trajectory()
+
+        if not trajectory:
+            return
+
+        for x, y in trajectory:
+            point = [x, -y + HEIGHT]
+            pygame.draw.line(self.DISPLAYSURF, BLACK, point, point)
+
+        pygame.display.update()
 
 
     def update_view(self):

@@ -46,8 +46,9 @@ def main():
     game_model.register_terrain_model(terrain_model=terrain_model)
 
     tank_model = TankModel()
-    tank_view = TankView()
+    tank_view = TankView(DISPLAYSURF=DISPLAYSURF)
     tank_view.register_model(tank_model)
+    tank_model.register_terrain_model(terrain_model=terrain_model)
     game_model.register_tank_model(tank_model=tank_model)
     game_view.register_tank_view(tank_view=tank_view)
 
