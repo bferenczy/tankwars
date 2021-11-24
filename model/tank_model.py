@@ -3,12 +3,9 @@ from math import sin, cos, tan, radians
 from shapely import geometry
 
 from constants import WIDTH, HEIGHT
-# TODO:remov
+from basic_types import Position, Vector
+# TODO:remove
 from weapon import DefaultWeapon
-
-
-Position = namedtuple("Position", "x y")
-Vector = namedtuple("Vector", "x y")
 
 
 class TankModel():
@@ -51,8 +48,8 @@ class TankModel():
 
 
     def _calculate_collision(self):
-        terrain = self.terrain_model.get_terrain_surface()
-        terrain_surface = geometry.LineString(terrain)
+        terrain_surface = self.terrain_model.get_surface()
+        # terrain_surface = geometry.LineString(terrain)
         projectile_trajectory = geometry.LineString(self.get_trajectory())
 
         intersection = terrain_surface.intersection(projectile_trajectory)

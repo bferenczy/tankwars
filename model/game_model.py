@@ -22,7 +22,6 @@ class GameModel():
         self._select_active_player()
         self.active_player.step()
         weapon = DefaultWeapon()
-        # self.terrain_model.destruct(aimed_column, weapon)
         self.tank_model.set_strength(40)
         self.tank_model.set_angle(aimed_column)
         self.tank_model.set_position(120, 150)
