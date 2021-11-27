@@ -48,7 +48,7 @@ def main():
     game_view.register_terrain_view(terrain_view=terrain_view)
     game_model.register_terrain_model(terrain_model=terrain_model)
 
-    tank_model = TankModel(position=Position(150, 400),
+    tank_model = TankModel(position=Position(100, 400),
                            angle=45,
                            strength=40)
     tank_view = TankView(DISPLAYSURF=DISPLAYSURF)
@@ -59,7 +59,7 @@ def main():
     player1.register_tank_model(tank_model=tank_model)
 
 
-    tank_model_2 = TankModel(position=Position(600, 400),
+    tank_model_2 = TankModel(position=Position(WIDTH-100, 400),
                              angle=135,
                              strength=40)
     tank_view_2 = TankView(DISPLAYSURF=DISPLAYSURF)

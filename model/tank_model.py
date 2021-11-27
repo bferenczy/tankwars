@@ -4,18 +4,21 @@ from shapely import geometry
 
 
 from .model import IModel
+from collideable import ICollideable
 from constants import WIDTH, HEIGHT, G
 from basic_types import Position, Vector
 from .default_weapon_model import DefaultWeaponModel
 
 
-class TankModel(IModel):
+class TankModel(IModel, ICollideable):
 
 
     def __init__(self, position=None, angle=None, strength=None):
         self.terrain_model = None
         self.trajectory = list()
         self.position = position
+        self.width = 20
+        self.height = 15
         self.angle = angle
         self.strength = strength
 
@@ -40,6 +43,14 @@ class TankModel(IModel):
         self.strength = new_strength
 
 
+    def get_surface(self):
+        pass
+
+
+    def collide(self):
+        pass
+
+
     def modify_angle(self, angle_difference):
         self.angle = self.angle + angle_difference
         if self.angle == 90 or self.angle == 270:
@@ -55,6 +66,10 @@ class TankModel(IModel):
 
     def hit(self, other_surface) -> bool:
         pass
+
+
+    def get_state(self):
+        return self.position, self.width, self.height
 
 
     def _calculate_trajectory(self):
@@ -73,10 +88,15 @@ class TankModel(IModel):
 
     def execute(self, collideables):
         weapon = DefaultWeaponModel()
-        print(self.angle)
         weapon.fire(self.position, self.strength, self.angle, collideables)
-        self.trajectory = []
+        #self.trajectory = []
 
         return weapon
 
 
+    def update(self):
+        terrain_state = self.terrain_model.get_terrain_state()
+        self.position = Position(
+            x = self.position.x,
+            y = terrain_state[self.position.x] + self.height
+        )

@@ -18,14 +18,21 @@ class TankView(View):
 
 
     def draw(self):
-        trajectory = self.tank_model.get_trajectory()
-
-        if not trajectory:
-            return
-
-        for x, y in trajectory:
+        for x, y in self.tank_model.get_trajectory():
             point = [x, -y + HEIGHT]
             pygame.draw.line(self.DISPLAYSURF, BLACK, point, point)
+
+
+        position, width, height = self.tank_model.get_state()
+        bottom_left_corner = (int(position[0] - width/2),
+                              -int(position[1] - height/2)+HEIGHT)
+        pygame.draw.rect(self.DISPLAYSURF,
+                         [0, 0, 255],
+                         [bottom_left_corner[0],
+                          bottom_left_corner[1],
+                          width,
+                          height])
+
 
 
     def update_view(self):

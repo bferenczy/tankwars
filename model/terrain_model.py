@@ -34,9 +34,14 @@ class TerrainModel(ICollideable, IModel):
         return geometry.LineString(surface_points)
 
 
-    def collide(self, x: int, weapon: IWeapon):
-        self.destruct(x=x, weapon=weapon)
-
+    def collide(self, intersection, collideable):
+        if isinstance(collideable, IWeapon):
+            # TODO
+            x = int(intersection[0][0])
+            self.destruct(x=x, weapon=collideable)
+        else:
+            print("sdfs")
+            pass
 
 
     def execute(self):

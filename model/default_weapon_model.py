@@ -4,16 +4,17 @@ import pygame
 
 
 from collideable import ICollideable
+from weapon import IWeapon
 from basic_types import Position, Vector
 
 
-class DefaultWeaponModel(ICollideable):
+class DefaultWeaponModel(IWeapon ,ICollideable):
 
 
     def __init__(self):
         self.current_position = None
         self.start_position = None
-        self.radius = 10
+        self.radius = 5
         self.strength = None
         self.angle = None
         self.start_time = None
@@ -56,12 +57,12 @@ class DefaultWeaponModel(ICollideable):
 
 
     def get_damage(self):
-        return self.radius
+        return 15
 
 
     def move(self):
         current_time = pygame.time.get_ticks() # in millis
-        t = (current_time - self.start_time) / 100
+        t = (current_time - self.start_time) / 1000
         g = 10
 
         displacement = Vector(
@@ -76,8 +77,6 @@ class DefaultWeaponModel(ICollideable):
 
         for collideable in self.collideables:
             if (intersection := collideable.hit(self.get_surface())):
-                print("Hit", intersection)
-                x = intersection[0][0]
-                collideable.collide(int(x), self)
+                collideable.collide(intersection, self)
                 self.moving = False
 

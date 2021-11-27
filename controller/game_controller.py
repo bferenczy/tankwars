@@ -66,6 +66,8 @@ class GameController(Controller):
 
         self._deregister_model(model)
         del default_weapon_view
+        self.game_model.tank_models[0].update()
+        self.game_model.tank_models[1].update()
         self.update_view()
 
 
