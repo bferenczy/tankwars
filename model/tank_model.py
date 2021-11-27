@@ -12,12 +12,12 @@ from .default_weapon_model import DefaultWeaponModel
 class TankModel(IModel):
 
 
-    def __init__(self):
+    def __init__(self, position=None, angle=None, strength=None):
         self.terrain_model = None
-        self.position = None
         self.trajectory = list()
-        self.angle = 45
-        self.strength = 40
+        self.position = position
+        self.angle = angle
+        self.strength = strength
 
 
     def register_terrain_model(self, terrain_model):
@@ -42,6 +42,11 @@ class TankModel(IModel):
 
     def modify_angle(self, angle_difference):
         self.angle = self.angle + angle_difference
+        if self.angle == 90 or self.angle == 270:
+            if angle_difference > 0:
+                self.angle += 1
+            else:
+                self.angle -= 1
 
 
     def modify_strength(self, strength_difference):
@@ -58,16 +63,19 @@ class TankModel(IModel):
 
         trajectory = list()
         # parabolic form of the projectile motion
-        for x in range(WIDTH):
+        for x in range(-WIDTH, WIDTH):
             y = (tan(radians(self.angle)) * x) - ((G/(2 * u*u * cos(radians(self.angle)) * cos(radians(self.angle)) )) * x*x)
             trajectory.append(Vector(x + self.position.x, y + self.position.y))
+
 
         self.trajectory = trajectory
 
 
     def execute(self, collideables):
         weapon = DefaultWeaponModel()
+        print(self.angle)
         weapon.fire(self.position, self.strength, self.angle, collideables)
+        self.trajectory = []
 
         return weapon
 

@@ -6,6 +6,9 @@ from view.game_view import GameView
 import pygame
 
 
+from time import sleep
+
+
 class GameController(Controller):
 
 
@@ -24,6 +27,7 @@ class GameController(Controller):
 
     def run(self):
         while not self._is_game_over():
+            self.game_model.select_active_player()
             self._get_events()
             self._step()
 
@@ -31,27 +35,26 @@ class GameController(Controller):
     def _get_events(self):
         submitted = False
         while not submitted:
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_UP]:
+                self.game_model.modify_angle(0.1)
+            if keys[pygame.K_DOWN]:
+                self.game_model.modify_angle(-0.1)
+            if keys[pygame.K_LEFT]:
+                self.game_model.modify_strength(-0.1)
+            if keys[pygame.K_RIGHT]:
+                self.game_model.modify_strength(0.1)
+
+            self.update_view()
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        self.game_model.modify_angle(1)
-                    if event.key == pygame.K_DOWN:
-                        self.game_model.modify_angle(-1)
-                    if event.key == pygame.K_LEFT:
-                        self.game_model.modify_strength(-1)
-                    if event.key == pygame.K_RIGHT:
-                        self.game_model.modify_strength(1)
                     if event.key == pygame.K_RETURN:
                         submitted = True
-                self.update_view()
+                    if event.key == pygame.QUIT:
+                        exit(1)
 
 
     def _step(self):
-        self._execute_game_model()
-        self.game_model.select_active_player()
-
-
-    def _execute_game_model(self):
         model = self.game_model.execute()
         if model and isinstance(model, DefaultWeaponModel):
              default_weapon_view = self._create_default_weapon_view(model)

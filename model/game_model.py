@@ -8,7 +8,8 @@ class GameModel(IModel):
     def __init__(self, player1, player2):
         self.players = [player1, player2]
         self.active_player = None
-        self.tank_model = None
+        self.tank_models = list()
+        self.active_tank_model = None
         self.collideables = list()
 
 
@@ -18,24 +19,22 @@ class GameModel(IModel):
 
 
     def register_tank_model(self, tank_model):
-        self.tank_model = tank_model
+        self.tank_models.append(tank_model)
         self.collideables.append(tank_model)
-        # TODO: Move 
-        self.tank_model.set_position(120, 200)
 
 
     def modify_angle(self, difference):
-        self.tank_model.modify_angle(difference)
-        self.tank_model._calculate_trajectory()
+        self.active_tank_model.modify_angle(difference)
+        self.active_tank_model._calculate_trajectory()
 
 
     def modify_strength(self, difference):
-        self.tank_model.modify_strength(difference)
-        self.tank_model._calculate_trajectory()
+        self.active_tank_model.modify_strength(difference)
+        self.active_tank_model._calculate_trajectory()
 
 
     def execute(self):
-        return self.tank_model.execute(self.collideables)
+        return self.active_tank_model.execute(self.collideables)
 
 
     def select_active_player(self):
@@ -45,6 +44,8 @@ class GameModel(IModel):
             self.active_player = next(
                 filter(lambda x: x != self.active_player, self.players)
             )
+
+        self.active_tank_model = self.active_player.get_tank_model()
 
         print("Selected " + self.active_player.get_name() + " as active player.")
 

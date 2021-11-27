@@ -61,7 +61,7 @@ class DefaultWeaponModel(ICollideable):
 
     def move(self):
         current_time = pygame.time.get_ticks() # in millis
-        t = (current_time - self.start_time) / 1000
+        t = (current_time - self.start_time) / 100
         g = 10
 
         displacement = Vector(
