@@ -3,12 +3,13 @@ from shapely import geometry
 from scipy.interpolate import InterpolatedUnivariateSpline
 
 
+from .model import IModel
 from collideable import ICollideable
 from constants import WIDTH, HEIGHT
 from weapon import IWeapon
 
 
-class TerrainModel(ICollideable):
+class TerrainModel(ICollideable, IModel):
 
 
     def __init__(self, args):
@@ -24,7 +25,7 @@ class TerrainModel(ICollideable):
     def hit(self, other_collideable_surface: geometry) -> bool:
        terrain_surface = self.get_surface()
        intersection = terrain_surface.intersection(other_collideable_surface)
-       return False if intersection is None else True
+       return False if not list(intersection.coords) else list(intersection.coords)
 
 
     def get_surface(self):
@@ -35,6 +36,11 @@ class TerrainModel(ICollideable):
 
     def collide(self, x: int, weapon: IWeapon):
         self.destruct(x=x, weapon=weapon)
+
+
+
+    def execute(self):
+        pass
 
 
     def _generate_random_terrain(self, args):

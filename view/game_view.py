@@ -6,12 +6,14 @@ from constants import WHITE, FPS
 
 class GameView(View):
 
+
     def __init__(self, DISPLAYSURF, game_model=None):
         self.DISPLAYSURF = DISPLAYSURF
         self.FramePerSec = pygame.time.Clock()
         self.game_model = game_model
         self.terrain_view = None
         self.tank_view = None
+        self.weapon_view = None
 
 
     def register_terrain_view(self, terrain_view):
@@ -26,6 +28,14 @@ class GameView(View):
         self.game_model = game_model
 
 
+    def register_weapon_view(self, weapon_view):
+        self.weapon_view = weapon_view
+
+
+    def deregister_weapon_view(self):
+        self.weapon_view = None
+
+
     def tick(self):
         self.FramePerSec.tick(FPS)
 
@@ -36,7 +46,11 @@ class GameView(View):
 
     def draw(self):
         self.DISPLAYSURF.fill(WHITE)
+        if self.terrain_view:
+            self.terrain_view.update_view()
+        if self.tank_view:
+            self.tank_view.update_view()
+        if self.weapon_view:
+            self.weapon_view.update_view(self.DISPLAYSURF)
         pygame.display.update()
-        self.terrain_view.update_view()
-        self.tank_view.update_view()
 

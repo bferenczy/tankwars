@@ -27,7 +27,7 @@ class TankView(View):
             point = [x, -y + HEIGHT]
             pygame.draw.line(self.DISPLAYSURF, BLACK, point, point)
 
-        pygame.display.update()
+        # pygame.display.update()
 
 
     def update_view(self):

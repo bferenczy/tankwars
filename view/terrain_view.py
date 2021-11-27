@@ -27,8 +27,6 @@ class TerrainView(View):
         for x, y in enumerate(terrain):
             pygame.draw.rect(self.DISPLAYSURF, BLACK, [x, HEIGHT - y, 1, y])
 
-        pygame.display.update()
-
 
     def _terrain_state(self):
         return self.terrain_model.get_terrain_state()

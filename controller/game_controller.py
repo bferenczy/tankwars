@@ -1,5 +1,7 @@
 from .controller import Controller
 from model.game_model import GameModel
+from view.default_weapon_view import DefaultWeaponView
+from model.default_weapon_model import DefaultWeaponModel
 from view.game_view import GameView
 import pygame
 
@@ -22,25 +24,63 @@ class GameController(Controller):
 
     def run(self):
         while not self._is_game_over():
-            pygame.event.get()
+            self._get_events()
             self._step()
 
 
+    def _get_events(self):
+        submitted = False
+        while not submitted:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        self.game_model.modify_angle(1)
+                    if event.key == pygame.K_DOWN:
+                        self.game_model.modify_angle(-1)
+                    if event.key == pygame.K_LEFT:
+                        self.game_model.modify_strength(-1)
+                    if event.key == pygame.K_RIGHT:
+                        self.game_model.modify_strength(1)
+                    if event.key == pygame.K_RETURN:
+                        submitted = True
+                self.update_view()
+
+
     def _step(self):
+        self._execute_game_model()
+        self.game_model.select_active_player()
+
+
+    def _execute_game_model(self):
+        model = self.game_model.execute()
+        if model and isinstance(model, DefaultWeaponModel):
+             default_weapon_view = self._create_default_weapon_view(model)
+
+        while model.is_moving() is True:
+            self.game_view.tick()
+            model.move()
+            self.update_view()
+
+        self._deregister_model(model)
+        del default_weapon_view
         self.update_view()
-        # read user input - attack
-        aimed_column = self._get_user_input()
-        self.game_model.round(aimed_column=aimed_column)
-        # Why is this necessary?
-        self.game_view.tick()
+
+
+    def _deregister_model(self, model):
+        self.game_view.deregister_weapon_view()
+        del model
+
+
+    def _create_default_weapon_view(self, model):
+        default_weapon_view = DefaultWeaponView()
+        default_weapon_view.register_model(model)
+        self.game_view.register_weapon_view(default_weapon_view)
+
+        return default_weapon_view
 
 
     def update_view(self):
         self.game_view.draw()
-
-
-    def _get_user_input(self):
-        return int(input())
 
 
     def _is_game_over(self):
