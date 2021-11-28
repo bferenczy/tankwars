@@ -6,15 +6,16 @@ from shapely.geometry.multipolygon import MultiPolygon
 
 from .model import IModel
 from collideable import ICollideable
-from constants import WIDTH, HEIGHT, G
+from constants import WIDTH, HEIGHT, G, RED
 from basic_types import Position, Vector
 from .default_weapon_model import DefaultWeaponModel
+from weapon import IWeapon
 
 
 class TankModel(IModel, ICollideable):
 
 
-    def __init__(self, position=None, angle=None, strength=None, color=[255,0,0]):
+    def __init__(self, position=None, angle=None, strength=None, color=RED):
         self.terrain_model = None
         self.trajectory = list()
         self.position = position
@@ -24,6 +25,7 @@ class TankModel(IModel, ICollideable):
         self.strength = strength
         self.health = 100
         self.color = color
+        self.last_damage = 0
         self.update() if self.terrain_model else None
 
 
@@ -47,6 +49,7 @@ class TankModel(IModel, ICollideable):
     def set_strength(self, new_strength):
         self.strength = new_strength
 
+
     def get_surface(self):
         tankShape = [[0, -3.5], [9, -3.5], [12.5, 0], [26, 0], [29.5, -3.5], [39, -3.5], [39, -7], [29.5, -14.5], [9, -14.5], [0, -7]]
         tankShape = list(map(lambda x: [x[0]+self.position[0] - self.width/2, x[1] + self.position[1] + self.height/2], tankShape))
@@ -55,7 +58,13 @@ class TankModel(IModel, ICollideable):
 
 
     def collide(self, intersection, other_surface):
-        self.health -= other_surface.get_damage()
+        if isinstance(other_surface, IWeapon):
+            self.last_damage = other_surface.get_damage()
+            self.health -= self.last_damage
+            self.terrain_model.collide(self.position, self)
+            #self.terrain_model.collide([[self.position.x,
+            #    self.terrain_model.get_terrain_state()[self.position.x]]],
+            #    other_surface)
 
 
     def modify_angle(self, angle_difference):
@@ -81,6 +90,9 @@ class TankModel(IModel, ICollideable):
     def get_state(self):
         return self.position, self.width, self.height
 
+
+    def get_damage(self):
+        return self.last_damage
 
     def _calculate_trajectory(self):
         # https://courses.lumenlearning.com/boundless-physics/chapter/projectile-motion/

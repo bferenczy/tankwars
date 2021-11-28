@@ -5,6 +5,7 @@ from scipy.interpolate import InterpolatedUnivariateSpline
 
 
 from .model import IModel
+from model.tank_model import TankModel
 from collideable import ICollideable
 from constants import WIDTH, HEIGHT
 from weapon import IWeapon
@@ -45,12 +46,17 @@ class TerrainModel(ICollideable, IModel):
         if isinstance(collideable, IWeapon):
             # TODO
             x = int(intersection[0][0])
-            self.destruct(x=x, weapon=collideable)
-            for collideable in self.collideables:
-                collideable.update()
+            self.destruct(x, collideable)
+        elif isinstance(collideable, TankModel):
+            x = int(intersection[0])
+            print("dffsfsdfsdfsdfsdfsf")
+            self.destruct(x, collideable)
         else:
-            print("sdfs")
-            pass
+            raise NotImplementedError
+
+
+        for collideable in self.collideables:
+            collideable.update()
 
 
     def execute(self):
@@ -111,12 +117,12 @@ class TerrainModel(ICollideable, IModel):
         return True
 
 
-    def destruct(self, x, weapon: IWeapon):
+    def destruct(self, x, collideable):
         y = HEIGHT - self.columns[x]
         point_of_impact = [x, y]
-        radius = weapon.get_damage()
+        radius = collideable.get_damage()
 
-        # Calculate the intersection with weapon's radius for each column
+        # Calculate the intersection with collideable
         circle = geometry.Point(x, y).buffer(radius)
         circle_points = circle.exterior.coords
         circle_points = [[int(x), int(y)] for [x, y] in circle_points]

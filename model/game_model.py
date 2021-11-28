@@ -29,12 +29,12 @@ class GameModel(IModel):
 
     def modify_angle(self, difference):
         self.active_tank_model.modify_angle(difference)
-        #self.active_tank_model._calculate_trajectory()
+        self.active_tank_model._calculate_trajectory()
 
 
     def modify_strength(self, difference):
         self.active_tank_model.modify_strength(difference)
-        #self.active_tank_model._calculate_trajectory()
+        self.active_tank_model._calculate_trajectory()
 
 
     def execute(self):
