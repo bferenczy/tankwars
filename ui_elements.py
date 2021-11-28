@@ -268,11 +268,14 @@ class Smoke:
     def draw(self):
         if self.rect_A[0] <= -1280:
             self.rect_A[0] = 1280
-        
-        if self.rect_B[0] < -1280:
+            self.rect_B[0] = 0
+        elif self.rect_B[0] < -1280:
             self.rect_B[0] = 1280
-        self.rect_A[0] -= 1
-        self.rect_B[0] -= 1
+            self.rect_A[0] = 0
+        else:
+            self.rect_A[0] -= 1
+            self.rect_B[0] -= 1
+
 
         self.screen.blit(self.image, self.rect_A)
         self.screen.blit(self.image, self.rect_B)
