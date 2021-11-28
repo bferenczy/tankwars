@@ -29,17 +29,45 @@ class ScoresDB:
                 db.close()
 
 
-    def insert_player(self, player_name, looses=0, wins=0):
-        insert_player_query = ("INSERT INTO players "
+    def save_player_result(self, player_name, is_winner):
+        player = self.select_player_by_name(player_name)
+
+        if player:
+            if is_winner:
+                wins = player['wins'] + 1
+                losses = player['looses']
+            else:
+                wins = player['wins']
+                losses = player['looses'] + 1
+
+            update_query = ("UPDATE players "
+                        "SET wins=?, looses=?"
+                        "WHERE name=?")
+
+            try:
+                with self.connect_to_db() as connection:
+                    connection.cursor.execute(update_query, (wins, losses, player_name))
+                    connection.db.commit()
+            except sqlite3.Error:
+                print("Cannot update player")
+
+        else:
+            insert_player_query = ("INSERT INTO players "
                                "(name, wins, looses) VALUES (?, ?, ?)")
 
-        try:
-            with self.connect_to_db() as connection:
-                connection.cursor.execute(insert_player_query,
-                                          (player_name, wins, looses))
-                connection.db.commit()
-        except sqlite3.Error:
-            print("Cannot save players information")
+            try:
+                with self.connect_to_db() as connection:
+                    if is_winner:
+                        connection.cursor.execute(insert_player_query,
+                                                (player_name, 1, 0))
+                    else:
+                        connection.cursor.execute(insert_player_query,
+                                                (player_name, 0, 1))
+                    connection.db.commit()
+            except sqlite3.Error:
+                print("Cannot save players information")
+
+        
 
 
     def select_player_by_name(self, player_name):
@@ -71,19 +99,6 @@ class ScoresDB:
                 result.append(dict(p))
 
         return result
-
-
-    def update_player(self, player_name, wins, looses):
-        update_query = ("UPDATE players "
-                        "SET wins=?, looses=?"
-                        "WHERE name=?")
-
-        try:
-            with self.connect_to_db() as connection:
-                connection.cursor.execute(update_query, (wins, looses, player_name))
-                connection.db.commit()
-        except sqlite3.Error:
-            print("Cannot update player")
 
 
     @contextmanager

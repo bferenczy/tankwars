@@ -15,6 +15,12 @@ class Result:
         self.fps = fps
         self.result = result
         self._setWinnerLoser()
+        self._saveResultToDB()
+
+    def _saveResultToDB(self):
+        self.scoresdb.save_player_result(self.winner, True)
+        self.scoresdb.save_player_result(self.loser, False)
+
 
     def _setWinnerLoser(self):
         for player in self.result:

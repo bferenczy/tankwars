@@ -1,5 +1,6 @@
 # MacOS Bullshit
 **/.DS_Store
+**/scores.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
