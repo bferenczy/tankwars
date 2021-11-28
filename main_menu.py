@@ -5,6 +5,7 @@ import sys
   
 # initializing the constructor 
 pygame.init() 
+pygame.mixer.init()
 
 class MainMenu:
     def __init__(self, screen, fps: pygame.time.Clock) -> None:
@@ -13,7 +14,11 @@ class MainMenu:
         self.fps = fps
 
     def run(self) -> Scenes:
-        self.running = True
+        self.running = True 
+        if not pygame.mixer.music.get_busy():
+            pygame.mixer.music.load("sound/main_theme.wav")
+            pygame.mixer.music.play(-1)
+
         bg = Background(self.screen, "img/bg.png")
         smoke = Smoke(self.screen)
         
@@ -33,7 +38,7 @@ class MainMenu:
 
                 if btn_controls.handleEvent(event) is EventResponse.CLICKED:
                     return Scenes.CONTROLS
-                    
+
                 if btn_scores.handleEvent(event) is EventResponse.CLICKED:
                     return Scenes.SCORES
 
