@@ -2,6 +2,7 @@ from collections import namedtuple
 from math import sin, cos, tan, radians
 from shapely import geometry
 from shapely.geometry.multipolygon import MultiPolygon
+import pygame
 
 
 from .model import IModel
@@ -55,7 +56,11 @@ class TankModel(IModel, ICollideable):
 
 
     def collide(self, intersection, other_surface):
-        self.health -= other_surface.get_damage()
+        current_time = pygame.time.get_ticks() # in millis
+        t = (current_time - other_surface.start_time) / 100
+        total_damage = max(other_surface.get_damage() + other_surface.strength/2 - t*2.5, other_surface.get_damage()/2)
+        print(total_damage)
+        self.health -= total_damage
 
 
     def modify_angle(self, angle_difference):
