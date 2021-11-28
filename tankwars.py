@@ -2,7 +2,6 @@ import pygame, sys
 from pygame.locals import *
 
 
-# from player import HumanPlayer, AIPlayer
 from model.player_model import HumanPlayerModel
 from model.game_model import GameModel
 from controller.game_controller import GameController
@@ -27,14 +26,13 @@ def main():
 
     player1 = HumanPlayerModel(name="Bazsi")
     player2 = HumanPlayerModel(name="Laci")
-    # player2 = AIPlayer("Laci", 6)
-
 
     game_view = GameView(DISPLAYSURF=DISPLAYSURF)
     game_model = GameModel(player1=player1,
                            player2=player2)
     game_controller = GameController(game_model=game_model,
                                      game_view=game_view)
+    game_model.register_controller(controller=game_controller)
 
     args = {
         "MIN_SPLINE_POINTS": 2,
@@ -68,6 +66,8 @@ def main():
     game_model.register_tank_model(tank_model=tank_model_2)
     game_view.register_tank_view(tank_view=tank_view_2)
     player2.register_tank_model(tank_model=tank_model_2)
+    terrain_model.register_collideable(tank_model)
+    terrain_model.register_collideable(tank_model_2)
 
 
     try:
@@ -78,3 +78,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

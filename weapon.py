@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 
+from moveable import IMoveable
 
-class IWeapon(ABC):
+class IWeapon(IMoveable, ABC):
 
 
     @abstractmethod

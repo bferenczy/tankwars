@@ -1,10 +1,12 @@
 from shapely import geometry
+from shapely.validation import make_valid, explain_validity
 from math import sin, cos, radians
 import pygame
 
 
 from collideable import ICollideable
 from weapon import IWeapon
+from constants import WIDTH, HEIGHT, G
 from basic_types import Position, Vector
 
 
@@ -57,17 +59,20 @@ class DefaultWeaponModel(IWeapon ,ICollideable):
 
 
     def get_damage(self):
-        return 15
+        return self.radius**2
 
 
     def move(self):
+        if not self.is_valid_position():
+            self.moving = False
+            return
+
         current_time = pygame.time.get_ticks() # in millis
         t = (current_time - self.start_time) / 1000
-        g = 10
 
         displacement = Vector(
             x = self.strength * t * cos(radians(self.angle)),
-            y = self.strength * t * sin(radians(self.angle)) - (0.5 * g * t*t)
+            y = self.strength * t * sin(radians(self.angle)) - (0.5 * G * t*t)
         )
 
         self.current_position = Position(
@@ -79,4 +84,14 @@ class DefaultWeaponModel(IWeapon ,ICollideable):
             if (intersection := collideable.hit(self.get_surface())):
                 collideable.collide(intersection, self)
                 self.moving = False
+
+
+    def is_valid_position(self):
+        if self.current_position.x < 0 or self.current_position.x > WIDTH:
+            return False
+
+        if self.current_position.y < 0:
+            return False
+
+        return True
 

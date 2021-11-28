@@ -1,5 +1,6 @@
 import random
 from shapely import geometry
+from shapely.validation import make_valid, explain_validity
 from scipy.interpolate import InterpolatedUnivariateSpline
 
 
@@ -16,16 +17,22 @@ class TerrainModel(ICollideable, IModel):
         # holds only the y coordinates sorted by x [0-WIDTH)
         self.columns = list()
         self._generate_random_terrain(args)
+        self.collideables = list()
 
 
     def get_terrain_state(self):
         return self.columns
 
 
+    def register_collideable(self, collideable):
+        self.collideables.append(collideable)
+
+
     def hit(self, other_collideable_surface: geometry) -> bool:
-       terrain_surface = self.get_surface()
-       intersection = terrain_surface.intersection(other_collideable_surface)
-       return False if not list(intersection.coords) else list(intersection.coords)
+        terrain_surface = self.get_surface()
+        intersection = terrain_surface.intersection(other_collideable_surface)
+        intersection = make_valid(intersection)
+        return False if not list(intersection.coords) else list(intersection.coords)
 
 
     def get_surface(self):
@@ -39,6 +46,8 @@ class TerrainModel(ICollideable, IModel):
             # TODO
             x = int(intersection[0][0])
             self.destruct(x=x, weapon=collideable)
+            for collideable in self.collideables:
+                collideable.update()
         else:
             print("sdfs")
             pass

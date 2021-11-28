@@ -6,9 +6,6 @@ from view.game_view import GameView
 import pygame
 
 
-from time import sleep
-
-
 class GameController(Controller):
 
 
@@ -23,6 +20,23 @@ class GameController(Controller):
 
     def register_view(self, game_view):
         self.game_view = game_view
+
+
+    def new_model_created(self, model):
+        if model and isinstance(model, DefaultWeaponModel):
+             default_weapon_view = self._create_default_weapon_view(model)
+        else:
+            raise NotImplementedError
+
+        while model.is_moving() is True:
+            self.game_view.tick()
+            model.move()
+            self.update_view()
+
+        self.game_view.deregister_weapon_view()
+        del model
+        del default_weapon_view
+        #self.update_view()
 
 
     def run(self):
@@ -51,29 +65,13 @@ class GameController(Controller):
                     if event.key == pygame.K_RETURN:
                         submitted = True
                     if event.key == pygame.QUIT:
-                        exit(1)
+                        pygame.display.quit()
+                        pygame.quit()
+                        sys.exit()
 
 
     def _step(self):
-        model = self.game_model.execute()
-        if model and isinstance(model, DefaultWeaponModel):
-             default_weapon_view = self._create_default_weapon_view(model)
-
-        while model.is_moving() is True:
-            self.game_view.tick()
-            model.move()
-            self.update_view()
-
-        self._deregister_model(model)
-        del default_weapon_view
-        self.game_model.tank_models[0].update()
-        self.game_model.tank_models[1].update()
-        self.update_view()
-
-
-    def _deregister_model(self, model):
-        self.game_view.deregister_weapon_view()
-        del model
+        self.game_model.execute()
 
 
     def _create_default_weapon_view(self, model):

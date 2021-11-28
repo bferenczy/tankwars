@@ -21,10 +21,12 @@ class TankModel(IModel, ICollideable):
         self.height = 15
         self.angle = angle
         self.strength = strength
+        self.update() if self.terrain_model else None
 
 
     def register_terrain_model(self, terrain_model):
         self.terrain_model = terrain_model
+        self.update()
 
 
     def get_trajectory(self):
