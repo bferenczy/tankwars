@@ -6,6 +6,7 @@ class Scenes(Enum):
     SCORES = 2
     GAME = 3
     RESULT = 4
+    CONTROLS = 5
 
 WIDTH = 640
 HEIGHT = 480

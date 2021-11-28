@@ -31,7 +31,9 @@ class MainMenu:
                 if resp is EventResponse.CLICKED:
                     return Scenes.NEW
 
-                btn_controls.handleEvent(event)
+                if btn_controls.handleEvent(event) is EventResponse.CLICKED:
+                    return Scenes.CONTROLS
+                    
                 if btn_scores.handleEvent(event) is EventResponse.CLICKED:
                     return Scenes.SCORES
 
