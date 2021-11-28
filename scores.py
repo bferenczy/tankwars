@@ -1,29 +1,21 @@
-import pygame 
+import pygame
 import main_menu
 from ui_elements import *
 from constants import Scenes
+from data.scoresdb import ScoresDB
 import sys
 # initializing the constructor 
-pygame.init() 
+pygame.init()
 
 class Scores:
     def __init__(self, screen, fps: pygame.time.Clock) -> None:
         self.running = False
+        self.scoresdb = ScoresDB()
         self.screen = screen
         self.fps = fps
-        self.table = [
-            ["Zolika", 22, 112],
-            ["Petike", 15, 34],
-            ["Pistike", 9, 11],
-            ["Irénke", 7, 5],
-            ["Gabika", 5, 5],
-            ["Marcika", 5, 7],
-            ["Jancsika", 3, 5],
-            ["Gusztika", 2, 1],
-            ["Ferika", 1, 1],
-            ["Jocika", 1, 2]
-        ]
-        
+        self.table = []
+        self.__query_table()
+
     def __draw_title(self):
         title = TXT_HEADING1.render('SCORES', True, C_BLACK)
         self.screen.blit(title, [264, 22])
@@ -40,7 +32,7 @@ class Scores:
         self.screen.blit(name, [110, 100])
         self.screen.blit(wins, [300, 100])
         self.screen.blit(losses, [470, 100])
-    
+
     def __draw_results(self):
         for idx, res in enumerate(self.table[:5]):
             rank = TXT_BODY.render(str(idx + 1) + '.', True, C_BLACK)
@@ -52,7 +44,34 @@ class Scores:
             self.screen.blit(name, [110, 130+idx*30])
             self.screen.blit(wins, [300, 130+idx*30])
             self.screen.blit(losses, [470, 130+idx*30])
-    
+
+    def __query_table(self):
+        player = self.scoresdb.select_player_by_name("Laci")
+        if not player:
+            self.scoresdb.insert_player("Laci", 12, 24)
+
+        player = self.scoresdb.select_player_by_name("Bazsi")
+        if not player:
+            self.scoresdb.insert_player("Bazsi", 9, 34)
+
+        # update
+        player = self.scoresdb.select_player_by_name("Laci")
+        if not player:
+            self.scoresdb.insert_player("Laci", 12, 24)
+        else:
+            self.scoresdb.update_player("Laci", 13, 24)
+
+        players = self.scoresdb.select_players()
+        if players:
+            players = sorted(players, key = lambda i: i['wins'])
+
+        self.table = list()
+        for player in players:
+            self.table.append(
+                [player['name'], player['wins'], player['looses']]
+            )
+
+
     def run(self) -> str:
         self.running = True
 
@@ -61,7 +80,7 @@ class Scores:
 
         smoke = Smoke(self.screen)
 
-        while self.running: 
+        while self.running:
             # Handle events
             for event in pygame.event.get():
                 if btn_back.handleEvent(event) is EventResponse.CLICKED:
@@ -70,7 +89,7 @@ class Scores:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-            
+
             # Draw stuff
             bg.draw()
             self.__draw_title()
@@ -78,7 +97,8 @@ class Scores:
             self.__draw_results()
             btn_back.draw()
             smoke.draw()
-            
+
             # For displaying all elements
             pygame.display.update()
             self.fps.tick(60)
+
