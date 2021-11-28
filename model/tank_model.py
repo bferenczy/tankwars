@@ -46,10 +46,22 @@ class TankModel(IModel, ICollideable):
 
 
     def get_surface(self):
-        pass
+        left_bottom = [self.position.x - self.width/2,
+                       self.position.y - self.height/2]
+        left_top = [left_bottom[0],
+                    left_bottom[1] + self.height]
+        right_bottom = [left_bottom[0] + self.width,
+                        left_bottom[1]]
+        rigth_top = [left_bottom[0] + self.width,
+                     left_bottom[1] + self.height]
+
+        points = [left_bottom, left_top, rigth_top, right_bottom, left_bottom]
+        return geometry.LineString(points)
 
 
-    def collide(self):
+    def collide(self, intersection, other_surface):
+        #TODO
+        print("collision with tank")
         pass
 
 
@@ -67,7 +79,9 @@ class TankModel(IModel, ICollideable):
 
 
     def hit(self, other_surface) -> bool:
-        pass
+        tank_surface = self.get_surface()
+        intersection = tank_surface.intersection(other_surface)
+        return False if not list(intersection.coords) else list(intersection.coords)
 
 
     def get_state(self):
@@ -82,7 +96,7 @@ class TankModel(IModel, ICollideable):
         # parabolic form of the projectile motion
         for x in range(-WIDTH, WIDTH):
             y = (tan(radians(self.angle)) * x) - ((G/(2 * u*u * cos(radians(self.angle)) * cos(radians(self.angle)) )) * x*x)
-            trajectory.append(Vector(x + self.position.x, y + self.position.y))
+            trajectory.append(Vector(x + self.position.x, y + self.height + self.position.y))
 
 
         self.trajectory = trajectory
@@ -90,7 +104,11 @@ class TankModel(IModel, ICollideable):
 
     def execute(self, collideables):
         weapon = DefaultWeaponModel()
-        weapon.fire(self.position, self.strength, self.angle, collideables)
+        position = Position(
+            x = self.position.x,
+            y = self.position.y + self.height
+        )
+        weapon.fire(position, self.strength, self.angle, collideables)
         #self.trajectory = []
 
         return weapon
@@ -100,5 +118,6 @@ class TankModel(IModel, ICollideable):
         terrain_state = self.terrain_model.get_terrain_state()
         self.position = Position(
             x = self.position.x,
-            y = terrain_state[self.position.x] + self.height
+            y = terrain_state[self.position.x] + self.height/2
         )
+

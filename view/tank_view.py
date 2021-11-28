@@ -24,14 +24,21 @@ class TankView(View):
 
 
         position, width, height = self.tank_model.get_state()
-        bottom_left_corner = (int(position[0] - width/2),
-                              -int(position[1] - height/2)+HEIGHT)
+        top_left_corner = (int(position[0] - width/2),
+                           -int(position[1] + height/2)+HEIGHT)
         pygame.draw.rect(self.DISPLAYSURF,
                          [0, 0, 255],
-                         [bottom_left_corner[0],
-                          bottom_left_corner[1],
+                         [top_left_corner[0],
+                          top_left_corner[1],
                           width,
                           height])
+
+
+        # surface = self.tank_model.get_surface()
+        # for i in range(len(list(surface.coords))-1):
+        #     p1 = [list(surface.coords)[i][0], -list(surface.coords)[i][1]+HEIGHT]
+        #     p2 = [list(surface.coords)[i+1][0], -list(surface.coords)[i+1][1]+HEIGHT]
+        #     pygame.draw.line(self.DISPLAYSURF, [255, 0, 0], p1, p2)
 
 
 

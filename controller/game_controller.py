@@ -24,19 +24,21 @@ class GameController(Controller):
 
     def new_model_created(self, model):
         if model and isinstance(model, DefaultWeaponModel):
-             default_weapon_view = self._create_default_weapon_view(model)
+            self._weapon_model_created(model)
         else:
             raise NotImplementedError
 
-        while model.is_moving() is True:
+
+    def _weapon_model_created(self, weapon_model):
+        default_weapon_view = self._create_default_weapon_view(weapon_model)
+        while weapon_model and weapon_model.is_moving():
             self.game_view.tick()
-            model.move()
+            weapon_model.move()
             self.update_view()
 
         self.game_view.deregister_weapon_view()
-        del model
+        del weapon_model
         del default_weapon_view
-        #self.update_view()
 
 
     def run(self):

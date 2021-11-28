@@ -28,7 +28,7 @@ class DefaultWeaponModel(IWeapon ,ICollideable):
         projectile_surface = self.get_surface()
         intersection = projectile_surface.intersection(other_surface)
 
-        return True if intersection.coords else False
+        return False if not list(intersection.coords) else list(intersection.coords)
 
 
     def collide(self) -> None:
@@ -68,7 +68,7 @@ class DefaultWeaponModel(IWeapon ,ICollideable):
             return
 
         current_time = pygame.time.get_ticks() # in millis
-        t = (current_time - self.start_time) / 1000
+        t = (current_time - self.start_time) / 100
 
         displacement = Vector(
             x = self.strength * t * cos(radians(self.angle)),
