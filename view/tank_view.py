@@ -40,11 +40,11 @@ class TankView(View):
         endPoint = [startingPoint[0] + (unitCircleX * gunLength), startingPoint[1]-(unitCircleY * gunLength)]
         pygame.draw.line(self.DISPLAYSURF, self.tank_model.color, startingPoint, endPoint, width=4)
 
-        surface = self.tank_model.get_surface()
-        for i in range(len(list(surface.exterior.coords))-1):
-            p1 = [list(surface.exterior.coords)[i][0], -list(surface.exterior.coords)[i][1]+HEIGHT]
-            p2 = [list(surface.exterior.coords)[i+1][0], -list(surface.exterior.coords)[i+1][1]+HEIGHT]
-            pygame.draw.line(self.DISPLAYSURF, [255, 255, 0], p1, p2)
+        #surface = self.tank_model.get_surface()
+        #for i in range(len(list(surface.exterior.coords))-1):
+        #    p1 = [list(surface.exterior.coords)[i][0], -list(surface.exterior.coords)[i][1]+HEIGHT]
+        #    p2 = [list(surface.exterior.coords)[i+1][0], -list(surface.exterior.coords)[i+1][1]+HEIGHT]
+        #    pygame.draw.line(self.DISPLAYSURF, [255, 255, 0], p1, p2)
 
 
 
