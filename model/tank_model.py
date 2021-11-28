@@ -1,6 +1,7 @@
 from collections import namedtuple
 from math import sin, cos, tan, radians
 from shapely import geometry
+from shapely.geometry.multipolygon import MultiPolygon
 
 
 from .model import IModel
@@ -13,14 +14,16 @@ from .default_weapon_model import DefaultWeaponModel
 class TankModel(IModel, ICollideable):
 
 
-    def __init__(self, position=None, angle=None, strength=None):
+    def __init__(self, position=None, angle=None, strength=None, color=[255,0,0]):
         self.terrain_model = None
         self.trajectory = list()
         self.position = position
-        self.width = 20
-        self.height = 15
+        self.width = 39
+        self.height = 14.5
         self.angle = angle
         self.strength = strength
+        self.health = 100
+        self.color = color
         self.update() if self.terrain_model else None
 
 
@@ -44,25 +47,15 @@ class TankModel(IModel, ICollideable):
     def set_strength(self, new_strength):
         self.strength = new_strength
 
-
     def get_surface(self):
-        left_bottom = [self.position.x - self.width/2,
-                       self.position.y - self.height/2]
-        left_top = [left_bottom[0],
-                    left_bottom[1] + self.height]
-        right_bottom = [left_bottom[0] + self.width,
-                        left_bottom[1]]
-        rigth_top = [left_bottom[0] + self.width,
-                     left_bottom[1] + self.height]
+        tankShape = [[0, -3.5], [9, -3.5], [12.5, 0], [26, 0], [29.5, -3.5], [39, -3.5], [39, -7], [29.5, -14.5], [9, -14.5], [0, -7]]
+        tankShape = list(map(lambda x: [x[0]+self.position[0] - self.width/2, x[1] + self.position[1] + self.height/2], tankShape))
+        return geometry.Polygon(tankShape)
 
-        points = [left_bottom, left_top, rigth_top, right_bottom, left_bottom]
-        return geometry.LineString(points)
 
 
     def collide(self, intersection, other_surface):
-        #TODO
-        print("collision with tank")
-        pass
+        self.health -= other_surface.get_damage()
 
 
     def modify_angle(self, angle_difference):
@@ -76,12 +69,13 @@ class TankModel(IModel, ICollideable):
 
     def modify_strength(self, strength_difference):
         self.strength = self.strength + strength_difference
+        if self.strength < 0: self.strength = 0
+        if self.strength > 100: self.strength = 100
 
 
     def hit(self, other_surface) -> bool:
         tank_surface = self.get_surface()
-        intersection = tank_surface.intersection(other_surface)
-        return False if not list(intersection.coords) else list(intersection.coords)
+        return tank_surface.intersects(other_surface)
 
 
     def get_state(self):
@@ -104,9 +98,14 @@ class TankModel(IModel, ICollideable):
 
     def execute(self, collideables):
         weapon = DefaultWeaponModel()
+
+        unitCircleX = cos(radians(self.angle))
+        unitCircleY = sin(radians(self.angle))
+        gunLength = 15
+
         position = Position(
-            x = self.position.x,
-            y = self.position.y + self.height
+            x = self.position.x + unitCircleX*gunLength,
+            y = self.position.y + self.height + unitCircleY*gunLength
         )
         weapon.fire(position, self.strength, self.angle, collideables)
         #self.trajectory = []

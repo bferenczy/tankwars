@@ -1,4 +1,5 @@
 import pygame
+import math
 
 from .view import View
 
@@ -26,19 +27,24 @@ class TankView(View):
         position, width, height = self.tank_model.get_state()
         top_left_corner = (int(position[0] - width/2),
                            -int(position[1] + height/2)+HEIGHT)
-        pygame.draw.rect(self.DISPLAYSURF,
-                         [0, 0, 255],
-                         [top_left_corner[0],
-                          top_left_corner[1],
-                          width,
-                          height])
 
+        tankPolygon = list(self.tank_model.get_surface().exterior.coords)
+        tankPolygon = list(map(lambda x: [x[0], HEIGHT-x[1]], tankPolygon))
+        pygame.draw.polygon(self.DISPLAYSURF, self.tank_model.color, tankPolygon)
 
-        # surface = self.tank_model.get_surface()
-        # for i in range(len(list(surface.coords))-1):
-        #     p1 = [list(surface.coords)[i][0], -list(surface.coords)[i][1]+HEIGHT]
-        #     p2 = [list(surface.coords)[i+1][0], -list(surface.coords)[i+1][1]+HEIGHT]
-        #     pygame.draw.line(self.DISPLAYSURF, [255, 0, 0], p1, p2)
+        # Draw gun
+        startingPoint = [top_left_corner[0] + width/2, top_left_corner[1]]
+        unitCircleX = math.cos(math.radians(self.tank_model.angle))
+        unitCircleY = math.sin(math.radians(self.tank_model.angle))
+        gunLength = 15
+        endPoint = [startingPoint[0] + (unitCircleX * gunLength), startingPoint[1]-(unitCircleY * gunLength)]
+        pygame.draw.line(self.DISPLAYSURF, self.tank_model.color, startingPoint, endPoint, width=4)
+
+        surface = self.tank_model.get_surface()
+        for i in range(len(list(surface.exterior.coords))-1):
+            p1 = [list(surface.exterior.coords)[i][0], -list(surface.exterior.coords)[i][1]+HEIGHT]
+            p2 = [list(surface.exterior.coords)[i+1][0], -list(surface.exterior.coords)[i+1][1]+HEIGHT]
+            pygame.draw.line(self.DISPLAYSURF, [255, 255, 0], p1, p2)
 
 
 

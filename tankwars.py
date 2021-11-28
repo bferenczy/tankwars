@@ -1,12 +1,12 @@
 import pygame, sys
 from pygame.locals import *
 
-
 from model.player_model import HumanPlayerModel
 from model.game_model import GameModel
 from controller.game_controller import GameController
 from view.game_view import GameView
 from model.terrain_model import TerrainModel
+from view.gui import GUI
 from view.terrain_view import TerrainView
 from model.tank_model import TankModel
 from view.tank_view import TankView
@@ -59,7 +59,7 @@ def main():
 
     tank_model_2 = TankModel(position=Position(WIDTH-100, 400),
                              angle=135,
-                             strength=40)
+                             strength=40, color = [0,0,255])
     tank_view_2 = TankView(DISPLAYSURF=DISPLAYSURF)
     tank_view_2.register_model(tank_model_2)
     tank_model_2.register_terrain_model(terrain_model=terrain_model)
@@ -68,6 +68,7 @@ def main():
     player2.register_tank_model(tank_model=tank_model_2)
     terrain_model.register_collideable(tank_model)
     terrain_model.register_collideable(tank_model_2)
+    game_view.register_model(game_model=game_model)
 
 
     try:

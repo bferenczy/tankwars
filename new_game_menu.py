@@ -18,27 +18,19 @@ class NewGameMenu:
             "p1_color": 'Red',
             "p2_color": 'Red'
         }
-        
-    def __draw_title(self):
-        title_color = [90, 54, 28]
-        title_font = pygame.font.SysFont('Impact', 36)
-        title = title_font.render('NEW GAME', True, title_color)
-        self.screen.blit(title, [245, 22])
-        pygame.draw.rect(self.screen, title_color, [221, 44, 13, 5])
-        pygame.draw.rect(self.screen, title_color, [406, 44, 13, 5])
 
     def __draw_texts(self):
-        text_color = [90, 54, 28]
-        player_font = pygame.font.SysFont('Impact', 30)
-        player1 = player_font.render('PLAYER 1', True, text_color)
-        player2 = player_font.render('PLAYER 2', True, text_color)
-        self.screen.blit(player1, [80, 100])
-        self.screen.blit(player2, [380, 100])
+        player1 = Text(self.screen, 'Player 1', pos=[80, 100], size=30)
+        player2 = Text(self.screen, 'Player 2', pos=[380, 100], size=30)
+        player1.draw()
+        player2.draw()
     
     def run(self) -> str:
         self.running = True
 
         bg = Background(self.screen, "img/bg.png")
+
+        title = Text(self.screen, "New Game", pos = [0, 21], size=36, align=Align.CENTER, decorate=True)
 
         inp_player1_name = InputField(self.screen, [80, 180, 160, 40], "Name")
         sw_player1_color = Switch(self.screen, [80,255,160,40], ["Red", "Blue"], "Color")
@@ -82,7 +74,7 @@ class NewGameMenu:
             
             # Draw stuff
             bg.draw()
-            self.__draw_title()
+            title.draw()
             self.__draw_texts()
             inp_player1_name.draw()
             inp_player2_name.draw()

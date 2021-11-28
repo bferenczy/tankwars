@@ -13,6 +13,8 @@ C_BLACK = [90, 54, 28]
 C_WHITE = [255, 236, 228]
 C_TRANSPARENT = [248, 214, 196]
 C_HOVER =  [122, 86, 69]
+C_HEALTH = [255, 80, 0]
+C_STRENGTH = [255, 184, 0]
 
 TXT_BODY = pygame.font.SysFont('Impact', 20)
 TXT_TITLE = pygame.font.SysFont('Impact', 26)
@@ -22,6 +24,11 @@ TXT_DISPLAY =  pygame.font.SysFont('Impact', 60)
 
 SOUND_CLICK = pygame.mixer.Sound("sound/click.wav")
 SOUND_HOVER = pygame.mixer.Sound("sound/btn_hover.wav")
+
+class Align(Enum):
+    LEFT = 0
+    RIGHT = 1
+    CENTER = 2
 
 class EventResponse(Enum):
     NONE = 0
@@ -173,6 +180,82 @@ class Switch(ABC):
             offset = (half - text_width) /2
             self.screen.blit(second, (self.rect.x + half + offset, self.rect.y+7))
 
+class ProgressBar(ABC):
+
+    def __init__(self, screen, rect, alignment=Align.LEFT, color=C_HEALTH) -> None:
+        super().__init__()
+        self.screen = screen
+        self.rect = pygame.Rect(rect)
+        self.status = 1
+        self.alignment = alignment
+        self.color = color
+    
+    def draw(self):
+        pygame.draw.rect(self.screen, C_BLACK, self.rect)
+        if self.alignment is Align.LEFT:
+            pygame.draw.rect(self.screen, self.color, [self.rect.x+3, self.rect.y + 3, (self.rect.w - 6)*self.status, self.rect.h-6])
+        if self.alignment is Align.RIGHT:
+            starting_pos = (self.rect.x+self.rect.w-3) - (self.rect.w-6)*self.status
+            pygame.draw.rect(self.screen, self.color, [starting_pos, self.rect.y + 3, (self.rect.w - 6)*self.status, self.rect.h-6])
+    
+    def set_status(self, status):
+        self.status = status
+
+    def handleEvent(self):
+        pass
+
+class Text(ABC):
+    def __init__(self, screen, text, pos=[0,0], size=20, color=C_BLACK, align=Align.LEFT, decorate=False) -> None:
+        super().__init__()
+        self.screen = screen
+        self.text = text.upper()
+        self.pos = pos
+        self.size = size
+        self.color = color
+        self.alignment = align
+        self.decorate = decorate
+        self.font = pygame.font.SysFont('Impact', self.size)
+        self.render = self.font.render(self.text, True, self.color)
+    
+    def draw(self):
+        pos = self.pos
+        if self.alignment is Align.LEFT:
+            pos = self.pos
+        if self.alignment is Align.RIGHT:
+            pos = [self.pos[0]-self.render.get_width(), self.pos[1]]
+        if self.alignment is Align.CENTER:
+            pos = [320-self.render.get_width()/2, self.pos[1]]
+
+        if self.decorate:
+            pos, rect1, rect2 = self.__getDecoration(pos)
+            self.screen.blit(self.render, pos)
+            pygame.draw.rect(self.screen, self.color, rect1)
+            pygame.draw.rect(self.screen, self.color, rect2)
+        else:
+            self.screen.blit(self.render, pos)
+
+    def __getDecoration(self, pos):
+        scale =  self.size / 40
+        dec_width = 13 * scale
+        dec_height = 5 * scale
+        gap = 5 * scale
+
+        if self.alignment is Align.LEFT:
+            pos = [pos[0]+(dec_width+gap), pos[1]]
+        if self.alignment is Align.RIGHT:
+            pos = [pos[0]-(dec_width+gap), pos[1]]
+        
+        rect1_pos = [pos[0]-(dec_width+gap), pos[1] + (self.render.get_height()/2) - round(dec_height/2) + 1]
+        rect2_pos = [pos[0] + self.render.get_width() + gap, pos[1] + (self.render.get_height()/2) - round(dec_height/2) + 1]
+
+        rect1 = pygame.Rect([rect1_pos[0], rect1_pos[1], dec_width, dec_height])
+        rect2 = pygame.Rect([rect2_pos[0], rect2_pos[1], dec_width, dec_height])
+        return [pos, rect1, rect2]
+
+    def handleEvent(self):
+        pass
+
+
 class Smoke:
     def __init__(self, screen) -> None:
         self.image = pygame.image.load("img/smoke_seamless.png")
@@ -183,13 +266,13 @@ class Smoke:
         self.screen = screen
     
     def draw(self):
-        self.rect_A[0] -= 1
-        self.rect_B[0] -= 1
         if self.rect_A[0] <= -1280:
             self.rect_A[0] = 1280
         
         if self.rect_B[0] < -1280:
             self.rect_B[0] = 1280
+        self.rect_A[0] -= 1
+        self.rect_B[0] -= 1
 
         self.screen.blit(self.image, self.rect_A)
         self.screen.blit(self.image, self.rect_B)

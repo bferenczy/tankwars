@@ -46,6 +46,7 @@ class AIPlayerModel(IPlayerModel):
     def __init__(self, name=None, tank_model=None):
         self.name = name
         self.tank_model = None
+        self.health = 100
 
 
     def get_name(self):
