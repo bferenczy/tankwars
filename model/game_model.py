@@ -29,12 +29,12 @@ class GameModel(IModel):
 
     def modify_angle(self, difference):
         self.active_tank_model.modify_angle(difference)
-        self.active_tank_model._calculate_trajectory()
+        #self.active_tank_model._calculate_trajectory()
 
 
     def modify_strength(self, difference):
         self.active_tank_model.modify_strength(difference)
-        self.active_tank_model._calculate_trajectory()
+        #self.active_tank_model._calculate_trajectory()
 
 
     def execute(self):
@@ -53,5 +53,24 @@ class GameModel(IModel):
         self.active_tank_model = self.active_player.get_tank_model()
 
         print("Selected " + self.active_player.get_name() + " as active player.")
+
+
+    def get_result(self):
+        result = []
+        for p in self.players:
+            result.append({
+                "name": p.get_name(),
+                "winner": p.get_health() > 0
+            })
+
+        return result
+
+
+    def is_game_over(self):
+        for p in self.players:
+            if p.get_health() <= 0:
+                return True
+
+        return False
 
 

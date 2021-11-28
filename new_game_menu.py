@@ -1,10 +1,10 @@
-import pygame 
+import pygame
 import main_menu
 from ui_elements import *
 from constants import Scenes
 import sys
 # initializing the constructor 
-pygame.init() 
+pygame.init()
 
 class NewGameMenu:
     def __init__(self, screen, fps: pygame.time.Clock) -> None:
@@ -12,8 +12,8 @@ class NewGameMenu:
         self.screen = screen
         self.fps = fps
         self.state = {
-            "player1": '',
-            "player2": 'Konrad',
+            "player1": 'Player1',
+            "player2": 'Player2',
             "AI": True,
             "p1_color": 'Red',
             "p2_color": 'Red'
@@ -24,7 +24,7 @@ class NewGameMenu:
         player2 = Text(self.screen, 'Player 2', pos=[380, 100], size=30)
         player1.draw()
         player2.draw()
-    
+
     def run(self) -> str:
         self.running = True
 
