@@ -1,5 +1,4 @@
 from .model import IModel
-from player import Player
 
 
 class GameModel(IModel):
