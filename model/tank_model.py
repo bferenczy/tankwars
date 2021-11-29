@@ -78,7 +78,7 @@ class TankModel(IModel, ICollideable):
         if self.strength > 100: self.strength = 100
 
 
-    def hit(self, other_surface) -> bool:
+    def hit(self, other_surface, other_object) -> bool:
         tank_surface = self.get_surface()
         return tank_surface.intersects(other_surface)
 

@@ -28,11 +28,17 @@ class TerrainModel(ICollideable, IModel):
         self.collideables.append(collideable)
 
 
-    def hit(self, other_collideable_surface: geometry) -> bool:
+    def hit(self, other_collideable_surface: geometry, other_object) -> bool:
+        pos_x = other_object.current_position.x
+        pos_y = other_object.current_position.y
+        if pos_x < 0 or pos_x > len(self.columns):
+            return False
+            
+        height = self.columns[int(pos_x)]
+
+        return height >= pos_y
         terrain_surface = self.get_surface()
-        intersection = terrain_surface.intersection(other_collideable_surface)
-        intersection = make_valid(intersection)
-        return False if not list(intersection.coords) else list(intersection.coords)
+        return terrain_surface.intersects(other_collideable_surface)
 
 
     def get_surface(self):
@@ -44,7 +50,7 @@ class TerrainModel(ICollideable, IModel):
     def collide(self, intersection, collideable):
         if isinstance(collideable, IWeapon):
             # TODO
-            x = int(intersection[0][0])
+            x = intersection[0]
             self.destruct(x=x, weapon=collideable)
             for collideable in self.collideables:
                 collideable.update()

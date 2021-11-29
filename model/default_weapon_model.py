@@ -73,21 +73,36 @@ class DefaultWeaponModel(IWeapon ,ICollideable):
         current_time = pygame.time.get_ticks() # in millis
         t = (current_time - self.start_time) / 100
 
+        if t == 0: return
+
         displacement = Vector(
             x = self.strength * t * cos(radians(self.angle)),
             y = self.strength * t * sin(radians(self.angle)) - (0.5 * G * t*t)
         )
 
+        new_x = int(self.start_position.x + self.strength * t * cos(radians(self.angle)))
+        horizontal_range = sorted([int(self.current_position.x), new_x])
+
         self.current_position = Position(
             x = self.start_position.x + displacement.x,
             y = self.start_position.y + displacement.y
         )
+        
+        for x in range(horizontal_range[0], horizontal_range[1]):
+            if x == 0: x = 0.01
+            dt = (self.strength * cos(radians(self.angle))) / x
+            y = self.start_position.y + (self.strength * dt * sin(radians(self.angle)) - (0.5 * G * dt*dt))
 
-        for collideable in self.collideables:
-            if (intersection := collideable.hit(self.get_surface())):
-                pygame.mixer.Sound.play(DefaultWeaponModel.SOUND_IMPACT)
-                collideable.collide(intersection, self)
-                self.moving = False
+            for collideable in self.collideables:
+                if (collideable.hit(self.get_surface(), self)):
+                    intersection = [int(x), int(y)]
+                    pygame.mixer.Sound.play(DefaultWeaponModel.SOUND_IMPACT)
+                    collideable.collide(intersection, self)
+                    self.moving = False
+                    return
+        
+
+        
 
 
     def is_valid_position(self):
