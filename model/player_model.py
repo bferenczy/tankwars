@@ -88,27 +88,10 @@ class AIPlayerModel(IPlayerModel):
 
 
     def set_attack(self):
-        angle = randrange(90, 160)
-        strength = randrange(40, 100)
-
-        while self._check_distance(angle, strength) is False:
-            strength = randrange(40, 90)
-
+        angle = randrange(110, 160)
+        strength = randrange(40, 80)
         self.tank_model.set_angle(angle)
         self.tank_model.set_strength(strength)
-
-
-    def _check_distance(self, angle, strength):
-        tank_distance = abs(self.tank_model.position.x - self.other_tank_model.position.x)
-        return True
-
-
-    def _calculate_trajectory(self, angle, strength, x):
-        # https://courses.lumenlearning.com/boundless-physics/chapter/projectile-motion/
-        u = strength
-        a = angle
-        # parabolic form of the projectile motion
-        y = (tan(radians(a)) * x) - ((G/(2 * u*u * cos(radians(a)) * cos(radians(a)) )) * x*x)
 
         
 
