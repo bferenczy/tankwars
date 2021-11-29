@@ -2,14 +2,14 @@ from collections import namedtuple
 from math import sin, cos, tan, radians
 from shapely import geometry
 from shapely.geometry.multipolygon import MultiPolygon
-
+import pygame
 
 from .model import IModel
-from collideable import ICollideable
+from interfaces.collideable import ICollideable
 from constants import WIDTH, HEIGHT, G, RED
 from basic_types import Position, Vector
 from .default_weapon_model import DefaultWeaponModel
-from weapon import IWeapon
+from interfaces.weapon import IWeapon
 
 
 class TankModel(IModel, ICollideable):
@@ -59,12 +59,12 @@ class TankModel(IModel, ICollideable):
 
     def collide(self, intersection, other_surface):
         if isinstance(other_surface, IWeapon):
-            self.last_damage = other_surface.get_damage()
-            self.health -= self.last_damage
+            current_time = pygame.time.get_ticks() # in millis
+            t = (current_time - other_surface.start_time) / 100
+            total_damage = max(other_surface.get_damage() + other_surface.strength/2 - t*2.5, other_surface.get_damage()/2)
+            self.health -= total_damage
+            print(total_damage)
             self.terrain_model.collide(self.position, self)
-            #self.terrain_model.collide([[self.position.x,
-            #    self.terrain_model.get_terrain_state()[self.position.x]]],
-            #    other_surface)
 
 
     def modify_angle(self, angle_difference):

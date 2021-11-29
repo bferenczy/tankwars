@@ -4,8 +4,8 @@ from math import sin, cos, radians
 import pygame
 
 
-from collideable import ICollideable
-from weapon import IWeapon
+from interfaces.collideable import ICollideable
+from interfaces.weapon import IWeapon
 from constants import WIDTH, HEIGHT, G
 from basic_types import Position, Vector
 
@@ -82,16 +82,16 @@ class DefaultWeaponModel(IWeapon ,ICollideable):
 
         new_x = int(self.start_position.x + self.strength * t * cos(radians(self.angle)))
         horizontal_range = sorted([int(self.current_position.x), new_x])
-
-        self.current_position = Position(
-            x = self.start_position.x + displacement.x,
-            y = self.start_position.y + displacement.y
-        )
         
         for x in range(horizontal_range[0], horizontal_range[1]):
             if x == 0: x = 0.01
-            dt = (self.strength * cos(radians(self.angle))) / x
+            dt = ( (x-self.start_position.x) / cos(radians(self.angle))) / self.strength
             y = self.start_position.y + (self.strength * dt * sin(radians(self.angle)) - (0.5 * G * dt*dt))
+            
+            self.current_position = Position(
+                x = x,
+                y = y
+            )
 
             for collideable in self.collideables:
                 if (collideable.hit(self.get_surface(), self)):
@@ -100,10 +100,11 @@ class DefaultWeaponModel(IWeapon ,ICollideable):
                     collideable.collide(intersection, self)
                     self.moving = False
                     return
-        
 
-        
-
+        self.current_position = Position(
+                        x = self.start_position.x + displacement.x,
+                        y = self.start_position.y + displacement.y
+        )
 
     def is_valid_position(self):
         if self.current_position.x < 0 or self.current_position.x > WIDTH:

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from moveable import IMoveable
+from interfaces.moveable import IMoveable
 
 class IWeapon(IMoveable, ABC):
 

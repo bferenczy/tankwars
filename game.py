@@ -1,11 +1,11 @@
 import pygame 
-from main_menu import MainMenu
-from result import Result
-from scores import Scores
-from new_game_menu import NewGameMenu
+from menu.main_menu import MainMenu
+from menu.result import Result
+from menu.scores import Scores
+from menu.new_game_menu import NewGameMenu
 from ui_elements import *
 from constants import Scenes
-from controls import Controls
+from menu.controls import Controls
 from controller.game_controller import GameController
 
 pygame.init()

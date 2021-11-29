@@ -2,7 +2,7 @@ import pygame
 from ui_elements import *
 from constants import Scenes
 import sys
-# initializing the constructor 
+
 pygame.init()
 
 class Controls:

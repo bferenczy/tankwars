@@ -1,5 +1,4 @@
 import pygame
-import main_menu
 from ui_elements import *
 from constants import Scenes
 from data.scoresdb import ScoresDB
