@@ -50,8 +50,12 @@ class GameController():
 
         while not self.game_model.is_game_over():
             self.game_model.select_active_player()
-            self._get_events()
-            self._step()
+            if isinstance(self.game_model.active_player, AIPlayerModel):
+                self.game_model.active_player.set_attack()
+            else:
+                self._get_events()
+
+            self.game_model.execute()
 
         return Scenes.RESULT, self.game_model.get_result()
 
@@ -78,10 +82,6 @@ class GameController():
                         pygame.display.quit()
                         pygame.quit()
                         sys.exit()
-
-
-    def _step(self):
-        self.game_model.execute()
 
 
     def _create_default_weapon_view(self, model):
@@ -147,8 +147,13 @@ class GameController():
         self.game_model.register_tank_model(tank_model=tank_model_2)
         self.game_view.register_tank_view(tank_view=tank_view_2)
         player2.register_tank_model(tank_model=tank_model_2)
+
         terrain_model.register_collideable(tank_model)
         terrain_model.register_collideable(tank_model_2)
         self.game_view.register_model(game_model=self.game_model)
+
+        if isinstance(player2, AIPlayerModel):
+            player2.register_other_tank_model(tank_model)
+            player2.register_terrain_model(terrain_model)
 
 
