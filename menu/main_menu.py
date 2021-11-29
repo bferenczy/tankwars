@@ -1,11 +1,6 @@
-import pygame 
-from ui_elements import *
-from constants import Scenes
+from helper.ui_elements import *
+from helper.constants import Scenes
 import sys
-  
-# initializing the constructor 
-pygame.init() 
-pygame.mixer.init()
 
 class MainMenu:
     def __init__(self, screen, fps: pygame.time.Clock) -> None:
@@ -49,7 +44,6 @@ class MainMenu:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-
 
             # Draw stuff
             bg.draw()

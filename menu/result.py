@@ -1,10 +1,7 @@
-import pygame
-from ui_elements import *
-from constants import Scenes
+from helper.ui_elements import *
+from helper.constants import Scenes
 from data.scoresdb import ScoresDB
 import sys
-# initializing the constructor 
-pygame.init()
 
 class Result:
     def __init__(self, screen, fps: pygame.time.Clock, result) -> None:
@@ -20,19 +17,16 @@ class Result:
         self.scoresdb.save_player_result(self.winner, True)
         self.scoresdb.save_player_result(self.loser, False)
 
-
     def _setWinnerLoser(self):
         for player in self.result:
             if player['winner']:
                 self.winner = player['name']
             else:
                 self.loser = player['name']
-   
 
-    def run(self) -> str:
+    def run(self) -> Scenes:
         self.running = True
 
-        pygame.mixer.init()
         pygame.mixer.music.load("sound/victory_bg.wav")
         pygame.mixer.music.play(-1)
 
@@ -40,11 +34,16 @@ class Result:
         btn_rematch = Button(self.screen, [168, 410, 140, 40], "Rematch")
         btn_menu = Button(self.screen, [328, 410, 140, 40], "Menu")
         
-        txt_winner = Text(self.screen, text='Winner:', color=C_BLACK, pos=[0,100], size=40, align=Align.CENTER)
-        txt_winning_player = Text(self.screen, text=self.winner, pos=[0, 140], size=60, decorate=True, align=Align.CENTER)
+        txt_winner = Text(self.screen, text='Winner:', color=C_BLACK, pos=[0, 100], size=40, align=Align.CENTER)
+        txt_winning_player = Text(self.screen,
+                                  text=self.winner,
+                                  pos=[0, 140],
+                                  size=60,
+                                  decorate=True,
+                                  align=Align.CENTER)
 
-        txt_loser = Text(self.screen, text="Loser:", pos = [0, 250], size=20, align=Align.CENTER)
-        txt_loser_player = Text(self.screen, text=self.loser, pos = [0, 270], size=20, align=Align.CENTER)
+        txt_loser = Text(self.screen, text="Loser:", pos=[0, 250], size=20, align=Align.CENTER)
+        txt_loser_player = Text(self.screen, text=self.loser, pos=[0, 270], size=20, align=Align.CENTER)
 
         smoke = Smoke(self.screen)
 
@@ -75,4 +74,3 @@ class Result:
             # For displaying all elements
             pygame.display.update()
             self.fps.tick(60)
-

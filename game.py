@@ -3,8 +3,8 @@ from menu.main_menu import MainMenu
 from menu.result import Result
 from menu.scores import Scores
 from menu.new_game_menu import NewGameMenu
-from ui_elements import *
-from constants import Scenes
+from helper.ui_elements import *
+from helper.constants import Scenes
 from menu.controls import Controls
 from controller.game_controller import GameController
 

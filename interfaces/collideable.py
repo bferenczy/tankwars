@@ -1,19 +1,14 @@
 from abc import ABC, abstractmethod
-from shapely import geometry
-
 
 class ICollideable(ABC):
 
-
     @abstractmethod
-    def hit(self) -> bool:
+    def hit(self, other_surface, other_object) -> bool:
         pass
 
-
     @abstractmethod
-    def collide(self) -> None:
+    def collide(self, intersection, other_surface) -> None:
         pass
-
 
     @abstractmethod
     def get_surface(self):

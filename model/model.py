@@ -1,9 +1,6 @@
 from abc import ABC, abstractmethod
 
-
 class IModel(ABC):
-
-
     @abstractmethod
-    def execute(self):
+    def execute(self, collideables):
         pass

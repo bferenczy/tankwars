@@ -1,6 +1,5 @@
-import pygame
-from ui_elements import *
-from constants import Scenes
+from helper.ui_elements import *
+from helper.constants import Scenes
 import sys
 
 pygame.init()
@@ -11,7 +10,7 @@ class Controls:
         self.screen = screen
         self.fps = fps
 
-    def run(self) -> str:
+    def run(self) -> Scenes:
         self.running = True
         bg = Background(self.screen, "img/bg.png")
         btn_back = Button(self.screen, [248, 410, 140, 40], "Back")
@@ -25,8 +24,6 @@ class Controls:
 
         fire = Text(self.screen, "Shoot:", [0, 270], size=26, align=Align.CENTER)
         enter = Text(self.screen, "Enter", [0, 300], size=20, align=Align.CENTER)
-
-
 
         smoke = Smoke(self.screen)
 
@@ -56,4 +53,3 @@ class Controls:
             # For displaying all elements
             pygame.display.update()
             self.fps.tick(60)
-
