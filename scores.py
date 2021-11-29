@@ -46,24 +46,9 @@ class Scores:
             self.screen.blit(losses, [470, 130+idx*30])
 
     def __query_table(self):
-        player = self.scoresdb.select_player_by_name("Laci")
-        if not player:
-            self.scoresdb.insert_player("Laci", 12, 24)
-
-        player = self.scoresdb.select_player_by_name("Bazsi")
-        if not player:
-            self.scoresdb.insert_player("Bazsi", 9, 34)
-
-        # update
-        player = self.scoresdb.select_player_by_name("Laci")
-        if not player:
-            self.scoresdb.insert_player("Laci", 12, 24)
-        else:
-            self.scoresdb.update_player("Laci", 13, 24)
-
         players = self.scoresdb.select_players()
         if players:
-            players = sorted(players, key = lambda i: i['wins'])
+            players = reversed(sorted(players, key = lambda i: i['wins']))
 
         self.table = list()
         for player in players:
@@ -74,9 +59,11 @@ class Scores:
 
     def run(self) -> str:
         self.running = True
+        self.__query_table()
 
         bg = Background(self.screen, "img/bg.png")
         btn_back = Button(self.screen, [248, 410, 140, 40], "Back")
+
 
         smoke = Smoke(self.screen)
 

@@ -49,7 +49,6 @@ class TerrainModel(ICollideable, IModel):
             self.destruct(x, collideable)
         elif isinstance(collideable, TankModel):
             x = int(intersection[0])
-            print("dffsfsdfsdfsdfsdfsf")
             self.destruct(x, collideable)
         else:
             raise NotImplementedError

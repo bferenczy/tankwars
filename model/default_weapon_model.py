@@ -12,6 +12,8 @@ from basic_types import Position, Vector
 
 class DefaultWeaponModel(IWeapon ,ICollideable):
 
+    SOUND_SHOT = pygame.mixer.Sound("sound/shot.wav")
+    SOUND_IMPACT = pygame.mixer.Sound("sound/impact.wav")
 
     def __init__(self):
         self.current_position = None
@@ -45,6 +47,7 @@ class DefaultWeaponModel(IWeapon ,ICollideable):
 
 
     def fire(self, position, strength, angle, collideables):
+        pygame.mixer.Sound.play(DefaultWeaponModel.SOUND_SHOT)
         self.collideables = collideables
         self.start_time = pygame.time.get_ticks() # save t0 in millis
         self.current_position = position
@@ -82,6 +85,7 @@ class DefaultWeaponModel(IWeapon ,ICollideable):
 
         for collideable in self.collideables:
             if (intersection := collideable.hit(self.get_surface())):
+                pygame.mixer.Sound.play(DefaultWeaponModel.SOUND_IMPACT)
                 collideable.collide(intersection, self)
                 self.moving = False
 

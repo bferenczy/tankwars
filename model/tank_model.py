@@ -94,6 +94,7 @@ class TankModel(IModel, ICollideable):
     def get_damage(self):
         return self.last_damage
 
+
     def _calculate_trajectory(self):
         # https://courses.lumenlearning.com/boundless-physics/chapter/projectile-motion/
         u = self.strength
