@@ -40,7 +40,7 @@ class GameController:
 
     def run(self):
         pygame.mixer.init()
-        pygame.mixer.music.load("sound/ambience.wav")
+        pygame.mixer.music.load("sound/ambience.mp3")
         pygame.mixer.music.play(-1)
 
         while not self.game_model.is_game_over():

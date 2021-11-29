@@ -8,8 +8,8 @@ from helper.basic_types import Position, Vector
 
 
 class DefaultWeaponModel(IWeapon, ICollideable):
-    SOUND_SHOT = pygame.mixer.Sound("sound/shot.wav")
-    SOUND_IMPACT = pygame.mixer.Sound("sound/impact.wav")
+    SOUND_SHOT = pygame.mixer.Sound("sound/shot.mp3")
+    SOUND_IMPACT = pygame.mixer.Sound("sound/impact.mp3")
 
     def __init__(self):
         self.current_position = None

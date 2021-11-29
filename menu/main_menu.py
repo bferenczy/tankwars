@@ -11,7 +11,7 @@ class MainMenu:
     def run(self) -> Scenes:
         self.running = True 
         if not pygame.mixer.music.get_busy():
-            pygame.mixer.music.load("sound/main_theme.wav")
+            pygame.mixer.music.load("sound/main_theme.mp3")
             pygame.mixer.music.play(-1)
 
         bg = Background(self.screen, "img/bg.png")

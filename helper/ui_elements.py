@@ -18,8 +18,8 @@ TXT_HEADING2 = pygame.font.SysFont('Impact', 30)
 TXT_HEADING1 = pygame.font.SysFont('Impact', 36)
 TXT_DISPLAY = pygame.font.SysFont('Impact', 60)
 
-SOUND_CLICK = pygame.mixer.Sound("sound/click.wav")
-SOUND_HOVER = pygame.mixer.Sound("sound/btn_hover.wav")
+SOUND_CLICK = pygame.mixer.Sound("sound/click.mp3")
+SOUND_HOVER = pygame.mixer.Sound("sound/btn_hover.mp3")
 
 
 class Align(Enum):

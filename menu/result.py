@@ -27,7 +27,7 @@ class Result:
     def run(self) -> Scenes:
         self.running = True
 
-        pygame.mixer.music.load("sound/victory_bg.wav")
+        pygame.mixer.music.load("sound/victory_bg.mp3")
         pygame.mixer.music.play(-1)
 
         bg = Background(self.screen, "img/bg.png")
